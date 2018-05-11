@@ -1,0 +1,7 @@
+*.log
+*.fmt
+*.aux
+*.out
+*.toc
+*.prv
+_region_.tex

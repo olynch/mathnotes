@@ -1,54 +1,25 @@
 \PassOptionsToPackage{unicode=true}{hyperref} % options for packages loaded elsewhere
 \PassOptionsToPackage{hyphens}{url}
-%
+% 
 \documentclass[]{book}
+\usepackage[a4paper]{geometry}
+\geometry{left=4cm}
+\geometry{right=4cm}
 \usepackage{lmodern}
 \usepackage{amssymb,amsmath}
 \usepackage{ifxetex,ifluatex}
-\usepackage{fixltx2e} % provides \textsubscript
-\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
-  \usepackage[T1]{fontenc}
-  \usepackage[utf8]{inputenc}
-  \usepackage{textcomp} % provides euro and other symbols
-\else % if luatex or xelatex
-  \usepackage{unicode-math}
-  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
-\fi
-% use upquote if available, for straight quotes in verbatim environments
-\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
-% use microtype if available
-\IfFileExists{microtype.sty}{%
 \usepackage[]{microtype}
 \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
-}{}
-\IfFileExists{parskip.sty}{%
-\usepackage{parskip}
-}{% else
-\setlength{\parindent}{0pt}
-\setlength{\parskip}{6pt plus 2pt minus 1pt}
-}
 \usepackage{hyperref}
 \hypersetup{
-            pdftitle={A First Look at Synthetic Differential Geometry},
-            pdfauthor={Owen Lynch},
-            pdfborder={0 0 0},
-            breaklinks=true}
+  pdftitle={A First Look at Synthetic Differential Geometry},
+  pdfauthor={Owen Lynch},
+  pdfborder={0 0 0},
+  breaklinks=true}
 \urlstyle{same}  % don't use monospace font for urls
-\setlength{\emergencystretch}{3em}  % prevent overfull lines
-\providecommand{\tightlist}{%
-  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
-\setcounter{secnumdepth}{5}
-% Redefines (sub)paragraphs to behave more like sections
-\ifx\paragraph\undefined\else
-\let\oldparagraph\paragraph
-\renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
-\fi
-\ifx\subparagraph\undefined\else
-\let\oldsubparagraph\subparagraph
-\renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
-\fi
 
-% set default figure placement to htbp
+\setcounter{secnumdepth}{5}
+
 \makeatletter
 \def\fps@figure{htbp}
 \makeatother
@@ -62,7 +33,11 @@
 \newtheorem{thm}{Theorem}
 \newtheorem{prop}[thm]{Proposition}
 
+\newtheorem{definition}{Definition}
+
 \newtheorem{ax}{Axiom}
+
+\newcommand{\abs}[1]{\left\lvert #1 \right\rvert}
 
 \title{A First Look at Synthetic Differential Geometry}
 \author{Owen Lynch}
@@ -72,39 +47,31 @@
 \maketitle
 
 {
-\setcounter{tocdepth}{2}
-\tableofcontents
+  \setcounter{tocdepth}{1}
+  \tableofcontents
 }
-\hypertarget{introduction}{%
-\chapter{Introduction}\label{introduction}}
 
-\hypertarget{what-are-these-notes}{%
-\section{What are these notes?}\label{what-are-these-notes}}
+\chapter{Introduction}
+
+\section{What are these notes?}
 
 These notes are a summary of a book I am reading on synthetic geometry, along with context that I know from various sources. The book that I am reading is fairly dense, so I am hoping that these notes will be a more accessible introduction to a topic that I think by rights should be much more intuitive than the normal presentation of differential geometry.  These notes will be updated when I have time: if you are viewing them currently know that they are INCOMPLETE and WIP.
 
-\hypertarget{what-is-synthetic-differential-geometry}{%
-\section{What is Synthetic Differential
-Geometry?}\label{what-is-synthetic-differential-geometry}}
+\section{What is Synthetic Differential Geometry?}
 
-\hypertarget{what-is-differential-geometry}{%
-\subsection{What is Differential
-Geometry?}\label{what-is-differential-geometry}}
+\subsection{What is Differential Geometry?}
 
 Differential geometry is the study of mathematical objects that are locally \emph{smooth}, called manifolds. This means that if you are sitting in a manifold and you look around, as long as you don't look to far away, you will feel like you are in Euclidean space. One example of this is the Earth. For a long time, people thought the Earth was flat, because locally the Earth is very similar to $\mathbb{R}^2$.  Eventually some people went all the way around the Earth (which you can't do in $\mathbb{R}^2$), which proved that the Earth was only locally flat, not globally flat, but you should give ancient people a break on the whole Earth is flat thing because it's honestly pretty hard to tell if you stay in a small region. Another example is spacetime. For a long time, people thought that we lived in a flat 4-dimensional space, where time was one dimension and space was the other three dimensions.  Again, this is an easy mistake to make because locally, our reality looks pretty flat. However, just like the Earth, even though locally spacetime looks like $\mathbb{R}^4$ it actually has curvature.  Whenever you ride in an airplane you see some weird curved flight plan that looks like it goes way off course. This is because the geometry of the sphere causes the shortest distance between two points to not be what it would be in the projection onto a flat map, even though locally the sphere looks pretty flat. Similarly, because spacetime is curved by gravity, the shortest distance between points is not always what you would expect if you thought that spacetime was flat. This is why light rays are ``bent'' when they pass by the sun -- they are following the shortest path like the airplane following a great circle.
 
 Anyways, a typical introduction to differential geometry defines a $n$-dimensional manifold as some subset $M$ of $\mathbb{R}^N$ such that for any point $p \in M$ there exists an open set $V_\alpha \subset \mathbb{R}^n$, an open set $U_\alpha \subset \mathbb{R}^N$ and an injective map $\alpha : V_\alpha \to U_\alpha$ such that $\mathrm{im}(\alpha) \subset M$, $p \in \mathrm{im}(\alpha)$, and $\alpha$ is differentiable. For instance, the sphere is the set $\{ (x,y,z) | \sqrt{x^2 + y^2 + z^2} = 1\}$, and one $\alpha$ for part of the sphere is $\alpha(\theta, \phi) = (\cos\theta\cos\phi, \sin\theta\cos\phi, \sin\phi)$.  This $\alpha$ covers \emph{almost} all of the sphere, but if you try to extend it the whole sphere it no longer can be injective--when $\phi = \pi/2$ all of the values of $\theta$ get mapped to the same point. But as long as we only consider a small part of the sphere, this map is fine.
 
-\hypertarget{the-synthetic-approach}{%
-\subsection{The Synthetic Approach}\label{the-synthetic-approach}}
+\subsection{The Synthetic Approach}
 
 One thing that's a bit odd about this is that when I think of geometry, I think of axioms and geometric objects, not limits and patchwork collections of sets. Back when you learned geometry in highschool, there was probably a certain amount mucking around with sines and cosines, but probably a lot of the time you were doing proofs that barely mentioned numbers. In geometry, a line is a primitive object that satisfies axioms, not a set of points. Wouldn't it be nice if we could do the same thing in differential geometry? This, in a nutshell, is the essence of synthetic differential geometry: differential geometry from an axiomatic framework, as opposed to a coordinate framework.  
 
-\hypertarget{infinitesmals}{%
-\section{Infinitesmals}\label{infinitesmals}}
+\section{Infinitesmals}
 
-\hypertarget{old-school-calculus}{%
-\subsection{Old-school Calculus}\label{old-school-calculus}}
+\subsection{Old-school Calculus}
 
 Back in the good old days before Herr Cantor and Monsieur Cauchy came along with their limits and mathematical rigor and messed everything up, calculus was much more intuitive. People worked with objects called infinitesimals, which represented infinitely small (but non-zero) quantities. Then, instead of mucking around with limits, you might
 define the derivative as
@@ -117,26 +84,21 @@ where $dt$ is an infinitesmal. For instance,
 
 After mathematicians stopped fangirling over limits, different ways of making this intuitive idea of infinitesimals rigorous started making the rounds. It turns out that there are several different ways of doing this, each with its own pros and cons. One of my favorite ways (which we will not be talking about today) uses Model Theory, another way uses weird things called ultrafilters. \footnote{which incidentally sounds like something Billy Mae would do a commercial on: ``DO YOU HAVE A PROBLEM WITH SMELLY AIR? USE ULTRAFILTERS, ONLY \$19.99 CALL NOW''} We are going to do a completely different approach.
 
-\hypertarget{in-synthetic-differential-geometry}{%
-\subsection{In synthetic differential
-geometry}\label{in-synthetic-differential-geometry}}
+\subsection{In synthetic differential geometry}
 
 The synthetic approach is to assume the existence of a special set of infinitesimals that we shall refer to as $D$, which is defined as the set of numbers whose square is 0. When we have a smooth function, we expect that near any point the function looks like a line. That is to say, we expect $f(a + dx) = f(a) + f'(a)dx$, where $f'(a)$ is the slope of the line. In synthetic differential geometry, we build things out of axioms, and our first axiom is that this is true.
 
-\emph{Linearity Axiom}: For all functions $g : D \to \mathbb{R}$,
-there a unique number s such that $g(dx) = g(0) + s \cdot dx$.
+\emph{Linearity Axiom}: For all functions $g : D \to \mathbb{R}$, there a unique number s such that $g(dx) = g(0) + s \cdot dx$.
 
-We use this linearity axiom to take derivatives. For instance, to take the derivative of a function $f: \mathbb{R} \to \mathbb{R}$ at a point $a$, we can define $g : D \to \mathbb{R}$ by $g(dx) = f(a + dx)$ and then use the linearity axiom to get a number $s$ such that $f(a + dx) = f(a) + s \cdot dx$. Because this exists for any $a$, we can define $f'(a)$ to be this $s$ for any $a$. The careful reader will notice I did not put any conditions on the function in the linearity axiom. This seems problematic. For instance consider the function $g : D \to \mathbb{R}$ defined by
+We use this Linearity Axiom to take derivatives. For instance, to take the derivative of a function $f: \mathbb{R} \to \mathbb{R}$ at a point $a$, we can define $g : D \to \mathbb{R}$ by $g(dx) = f(a + dx)$ and then use the Linearity Axiom to get a number $s$ such that $f(a + dx) = f(a) + s \cdot dx$. Because this exists for any $a$, we can define $f'(a)$ to be this $s$ for any $a$. The careful reader will notice I did not put any conditions on the function in the Linearity Axiom. This seems problematic. For instance consider the function $g : D \to \mathbb{R}$ defined by
 
 \[ g(dx) = \begin{cases} 1 \quad \text{if $dx \neq 0$} \\ 0 \quad \text{otherwise} \end{cases} \]
 
-If we apply the linearity axiom to this, we get $g(dx) = s \cdot dx$ for some s. Now, for $dx \neq 0$, $s \cdot dx = 1$. However, we can multiply this by $dx$ on both sides to get $s \cdot dx^2 = dx$, so $s \cdot 0 = dx$ and $0 = dx$ for all $dx$, whence $D = \{0\}$.  It seems like our theory has flopped before it could get off the ground.  To salvage our theory, we have to question the foundations of mathematics.
+If we apply the Linearity Axiom to this, we get $g(dx) = s \cdot dx$ for some s. Now, for $dx \neq 0$, $s \cdot dx = 1$. However, we can multiply this by $dx$ on both sides to get $s \cdot dx^2 = dx$, so $s \cdot 0 = dx$ and $0 = dx$ for all $dx$, whence $D = \{0\}$.  It seems like our theory has flopped before it could get off the ground.  To salvage our theory, we have to question the foundations of mathematics.
 
-\hypertarget{intuitionism}{%
-\section{Intuitionism}\label{intuitionism}}
+\section{Constructivism}
 
-\hypertarget{what-went-wrong-before}{%
-\subsection{What went wrong before?}\label{what-went-wrong-before}}
+\subsection{What went wrong before?}
 
 The killer of our fledgling theory was the function $g$. If we manage to remove $g$, then our theory might have a shot. But we have to not only eliminate $g$, we have to eliminate all piece-wise functions. In order to do this, let us examine the mechanism behind the construction of a piece-wise function. Whenever you have a piece-wise defined function, you are implicitly relying on the idea that given a condition, a number either satisfies this condition or it does not. This assumption is also know as the law of the excluded middle -- it states that there are no logical values for a statement other than true and false. We will abbreviate this to LEM. Anyways, practically, in a lot of cases it is infeasible to define functions based on LEM. For instance, try building a circuit that outputs 1V if you input a rational valued voltage into it and 0V if you input an irrational voltage. Asking this question doesn't even really make sense because voltages aren't that precise. There is a saying: when physics and logic disagree, change the logic. And that is exactly what we are going to do: we are going to throw out LEM. When people hear this, they immediately try to think of propositions that are neither true nor false, and, not being able to find one, conclude that this is bunk. This is because the correct interpretation is that given a proposition, it is often impossible or very difficult to tell whether it is true or false, so we are not going to assume that we always can when we define functions. It may be true that propositions are always true or false, but from a practical standpoint, it's infeasible to build things based on that assumption.
 
@@ -144,78 +106,146 @@ However, this is not how things work in standard mathematics. Therefore, we need
 
 This is for the best, because to be perfectly honest, living an LEM-free life is better for the soul. When you write a proof without LEM you have to actually construct any objects that you want to use, you can't just say that if they didn't exist there would be a contradiction.  Constructing your objects gives you a better intuition for what they look and feel like, which in turn makes you and your readers understand proofs better.
 
-\hypertarget{a-topos-to-call-home}{%
-\subsection{A Topos to Call Home}\label{a-topos-to-call-home}}
+\subsection{A Topos to Call Home}
 
 Topos is greek for ``place''. You can think of a topos like a country in mathematics. Most mathematicians live in \textbf{Set}, which is a topos made out of sets. But, sometimes to spice it up, we mathematicians like to visit other topoi, just like you might go with your family to Paris or Peru. Just like how different countries have different laws, different topoi have different laws. For instance, in Amsterdam you can get \emph{real} high, but you might have a much more difficult time with that in the US. Just like that, in the (mumble mumble mumble) topos, you can play around with infinitesimals without a care in the world, but in \textbf{Set} you have to worry about limits and other nasty stuff.
 
 I say (mumble mumble mumble) topos because I really don't know that much about the topos that you do synthetic geometry in, or that much topos theory in general. Luckily, just like you have been living in \textbf{Set} all your life without knowing any topos theory, you can work with the (mumble mumble mumble) topos without ever giving it much thought. In fact, the whole point of synthetic geometry is to free ourselves from having to work in a specific topos -- we just assume some laws and there are several suitable topoi that we might be in but we really don't care. We are multinational lawyers.
 
-One of the \emph{differences} between countries and topoi is that leaving a country is (normally) something discussed in the laws of a country, and normally countries trade with each other and have wars and other stuff, but topoi generally keep to themselves. In the case of the (mumble mumble mumble) topos, this means that as long as you follow the laws of the topos (which include not invoking LEM), you won't accidentally create an object that lives in another topos. It is \emph{this} property of topoi that allows the linearity axiom to work without putting any preconditions on the function involved. We do background checks on functions that want to come into our topos, and they have to promise to uphold the linearity axiom so help them Gauss, and while they are in our topos as long as they follow the laws they won't accidentally create any functions that might violate the linearity axiom.
+One of the \emph{differences} between countries and topoi is that leaving a country is (normally) something discussed in the laws of a country, and normally countries trade with each other and have wars and other stuff, but topoi generally keep to themselves. In the case of the (mumble mumble mumble) topos, this means that as long as you follow the laws of the topos (which include not invoking LEM), you won't accidentally create an object that lives in another topos. It is \emph{this} property of topoi that allows the Linearity Axiom to work without putting any preconditions on the function involved. We do background checks on functions that want to come into our topos, and they have to promise to uphold the Linearity Axiom so help them Gauss, and while they are in our topos as long as they follow the laws they won't accidentally create any functions that might violate the Linearity Axiom.
 
 One thing that is important to mention is that for the sake of intuition I will be treating various mathematical objects that live in synthetic geometry topoi sort of like sets, when they are in fact NOT SETS. This is to increase intuition and familiarity, but in order to make the distinction clear I will be careful to call them objects. When you hear ``object'' think ``sort of like a set, but maybe with some extra assumptions about it and maybe I can't do some of the things with it that I can do with sets''.
 
 So what are these laws I've been harping on about? I'll give a brief summary of differences between \textbf{Set} and a topos that synthetic geometry could live in.
 
 \begin{itemize}
-\tightlist
 \item
-  LEM is outlawed. Anybody using LEM will be KICKED OUT and will NOT be
-  allowed to come back unless they bring chocolate.
+  LEM is outlawed. Anybody using LEM will be KICKED OUT and will NOT be allowed to come back unless they bring chocolate.
 \item
-  We can no longer divide with impunity in $\mathbb{R}$. (For those of
-  you who have had some algebra:$\mathbb{R}$ has been downgraded from
-  a field to a commutative ring with a unit element). There are still
-  some numbers that are safe to divide by. For instance, you can always
-  divide by rational numbers, because all of the rational numbers are in
-  $\mathbb{R}$ and if $p/q$ is a rational number then $q/p$ is a
-  rational number (as long as $p \neq 0$). Therefore, if we want to
-  divide by $p/q$ we can just multiply by $q/p$ (and we can still
-  always multiply real numbers). There are also other real numbers that
-  you can divide by, it's just not all of them anymore. To emphasize
-  this change, we will no longer use $\mathbb{R}$ to denote the real
-  numbers, we will instead use just $R$, because in fact we might be
-  talking about any one of a number of topoi, each of which have their
-  own ``real number object'', and $\mathbb{R}$ normally denotes ``the
-  unique set of real numbers''.
+  We can no longer divide with impunity in $\mathbb{R}$. (For those of you who have had some algebra:$\mathbb{R}$ has been downgraded from a field to a commutative ring with a unit element). There are still some numbers that are safe to divide by. For instance, you can always divide by rational numbers, because all of the rational numbers are in $\mathbb{R}$ and if $p/q$ is a rational number then $q/p$ is a rational number (as long as $p \neq 0$). Therefore, if we want to divide by $p/q$ we can just multiply by $q/p$ (and we can still always multiply real numbers). There are also other real numbers that you can divide by, it's just not all of them anymore. To emphasize this change, we will no longer use $\mathbb{R}$ to denote the real numbers, we will instead use just $R$, because in fact we might be talking about any one of a number of topoi, each of which have their own ``real number object'', and $\mathbb{R}$ normally denotes ``the unique set of real numbers''.
 \item
-  Some members of $R$ square to 0, but are not themselves 0. We will
-  call the object of all these numbers $D$.
+  Some members of $R$ square to 0, but are not themselves 0. We will call the object of all these numbers $D$.
 \item
-  The linearity axiom is true for $D$ and $R$.
+  The Linearity Axiom is true for $D$ and $R$.
 \item
   Some other stuff that we'll get to when we get to.
 \end{itemize}
 
-\hypertarget{calculus}{%
-\chapter{Calculus}\label{calculus}}
+\chapter{Derivatives}
 
-\hypertarget{derivatives}{%
-\section{Derivatives}\label{derivatives}}
+\section{Infinitesimals Again}
 
-\hypertarget{linearity-axiom-revisited}{%
-\subsection{Linearity Axiom Revisited}\label{linearity-axiom-revisited}}
+Before we get into derivatives, let's play around with infinitesimals a bit to get a feel for them. There are two fundamental facts about infinitesimals. The first is that their square is 0, the second is the Linearity Axiom, which I will restate for clarity.
 
 \begin{ax}[Linearity Axiom]
-For all $f : D \to R$ there exists a unique $b \in R$ such that $f(d) = f(0) + b \cdot d$.
+  Given a function $f : D \to R$ there exists a unique $b \in R$ such that $f(d) = f(0) + b \cdot d$.
 \end{ax}
 
-Let's play around with infinitesimals a bit. One question we ought to ask is whether we can divide by infinitesimals. Remember, we can't divide by everything in $R$, but we can divide by somethings, so it is reasonable to ask whether infinitesimals are one of the things we can divide by. I claim that we cannot.
+One question we ought to ask is whether we can divide by infinitesimals. Remember, we can't divide by everything in $R$, but we can divide by some things, so it is reasonable to ask whether we can divide by some infinitesimals. However, I claim that we cannot.
 
 \begin{prop}
-Infinitesimals do not have inverses.
+  Infinitesimals do not have inverses.
 \end{prop}
 \begin{proof}
-Fix $d \in D$. Suppose that there exists some $d' \in R$ such that $d \cdot d' = 1$.
+  Fix $d \in D$. Suppose that there exists some $d' \in R$ such that $d \cdot d' = 1$.
 
-\begin{align*}
-  d \cdot d &= 0 \\
-  d' \cdot d \cdot d &= 0 \\
-  1 \cdot d &= 0 \\
-  d &= 0
-\end{align*}
+  \begin{align*}
+    d \cdot d &= 0 \\
+    d' \cdot d \cdot d &= 0 \\
+    1 \cdot d &= 0 \\
+    d &= 0
+  \end{align*}
 
-As $D \neq \{0\}$, this is a contradiction, thus we cannot divide by any $d \in D$.
+  Therefore $d = 0$ for all $d \in D$. As $D \neq \{0\}$, this is a contradiction, thus we cannot divide by any $d \in D$.
+\end{proof}
+
+However, we can sort of cancel, using the Linearity Axiom.
+
+\begin{thm}
+  \label{cancellation}
+  If $a \cdot d = b \cdot d$ for all $d \in D$ then $a = b$
+\end{thm}
+\begin{proof}
+  Consider $f(d) = a \cdot d - b \cdot d = (a - b) \cdot d = 0$. By the uniqueness part of the Linearity Axiom, this implies $(a - b) = 0$, so $a = b$ as required.
+\end{proof}
+
+One possible point of confusion is that I just proved something by contradiction, but we said before that proof by contradiction was invalid in synthetic differential geometry... What gives? The crux of the matter rests in the difference between two forms of proof by contradiction. The first form of proof by contradiction is $(P \to \bot) \to \neg P$, where $\bot$ is a symbol that means ``false''. This is perfectly valid in constructivist logic, in $\neg P$ is commonly defined to be $P \to \bot$. The second form of proof by contradiction is $\neg(\neg P) \to P$. This is the ``something out of nothing'' proof by contradiction, where you haven't actually constructed a proof of $P$ and are just asserting that it exists because if it didn't there would be a contradiction. This is actually equivalent to LEM, as the dedicated reader should check. Anyways, the above proof uses the first form of proof by contradiction, so it is valid within constructivist logic.
+
+Another question that is natural to ask is whether or not $d_1 + d_2 \in D$ for $d_1, d_2 \in D$. It turns out this is \emph{not} the case.
+
+\begin{prop}
+  Infinitesimals are not closed under addition.
+\end{prop}
+\begin{proof}
+  Let $d_3, d_2 \in D$. We can start to answer this question by taking a whack at it with the definition of infinitesimal.
+
+  \begin{align*}
+    (d_1 + d_2)^2 &= d_1^2 + 2d_1 \cdot d_2 + d_2^2 \\
+                  &= 0 + 2d_1 \cdot d_2 + 0 \\
+                  &= 2d_1 \cdot d_2
+  \end{align*}
+
+  Note that we can divide by 2 as it is a rational number, so $2d_1 \cdot d_2 = 0$ iff $d_1 \cdot d_2 = 0$. Therefore, $d_1 + d_2$ is an infinitesimal if and only if $d_1 \cdot d_2 = 0$. Certainly, for some $d_1,d_2$ this will be the case, for instance if $d_2 = x \cdot d_1$ for $x \in R$. However, will this always be the case?
+
+  Fix $d_1 \in D$, $d_1 \neq 0$. Suppose that for all $d_2 \in D$, $d_2 \cdot d_1 = 0$. Define $f : D \to R$ by $f(d_2) = d_2 \cdot d_1$. By our assumption, $f(d) = 0$ for all $d$. However, then by the uniqueness part of the Linearity Axiom, $d_1 = 0$. This is a contradiction; we are done.\footnote{Note that again we have used proof by contradiction in order to prove that something is false}
+\end{proof}
+
+This implies that there are different grades of infinitesimals. For instance, $(d_1+d_2)^2$ is not always 0, but $(d_1+d_2)^3 = (d_1+d_2)(2d_1 \cdot d_2) = 2(d_1^2d_2+d_1d_2^2) = 2(0 + 0) = 0$, so $(d_1+d_2)^3$ is always 0. Similarly, $(d_1+d_2+d_3)^3$ is not always 0, but $(d_1+d_2+d_3)^4$ is always 0. In fact, this generalizes.
+
+\begin{definition}
+  Let $D_n$ be the object $\{ d_1+\ldots+d_n | d_k \in D\}$, so that $D_1 = D$, $D_2 = \{ d_1 + d_2 | d_1,d_2 \in D \}$, etc.
+\end{definition}
+
+\begin{prop}
+  If $\delta \in D_n$, $\delta^{n+1} = 0$.
+\end{prop}
+\begin{proof}
+  First we introduce a bit of notation. If $\alpha = (\alpha_1,\ldots,\alpha_n)$ and $\mathbf{d} = (d_1,\ldots,d_n)$ then $\mathbf{d}^\alpha = d_1^{\alpha_1} \cdot \ldots \cdot d_n^{\alpha_n}$. Also, let $\abs{\alpha} = \sum_{k=1}^n\alpha_k$. This allows us to directly compute $\delta^n$ (the key insight is that $\mathbf{d}^\alpha = 0$ if $\alpha_k > 1$ for any $\alpha_k$, so only one term in the big sum will be left alive).
+  \begin{align*}
+    \delta^n &= (d_1 + \ldots + d_n)^n \\
+                 &= \sum_{\abs{\alpha} = n}\mathbf{d}^\alpha \\
+                 &= d_1 \cdot \ldots \cdot d_n \\
+  \end{align*}
+ Now, $\delta^{n+1} = (d_1 + \ldots + d_n)(d_1 \cdot \ldots \cdot d_n)$ expands out into an expression where each term has a $d_k^2$ in it somewhere, so the whole thing is 0, as required.
+\end{proof}
+
+This implies that for $\delta \in D_n$, any polynomial in $\delta$ will have at most $n+1$ terms as all higher-order terms will go to 0. This suggests a generalization of the Linearity Axiom.
+
+\begin{thm}
+  For all $f : D_n \to R$, there exist unique $a_1, \ldots, a_n$ such that $f(\delta) = f(0) + a_1\delta + \ldots + a_n\delta^n$.
+\end{thm}
+\begin{proof}
+  We prove this by induction on $n$. For $n = 1$, this is the Linearity Axiom. Now, assume that for all maps $f : D_n \to R$ there exist unique $a_1,\ldots,a_n$ with $f(\delta) = f(0) + a_1\delta + \ldots + a_n\delta^n$. Let $g : D_{n+1} \to R$ be any function, and consider $h : D \to (D_n \to R)$ defined by $h_d(\delta) = g(d + \delta)$. Now, if we fix $d$ then by the induction hypothesis $h_d(\delta) = h_d(0) + c_{k,d}\delta + \ldots + c_{n,d}\delta^n$. As these $c_{k,d}$ always exist and are unique for every $d \in D$, we have functions $c_k : D \to R$. By the Linearity Axiom, $c_{k,d} = c_{k,0} + b_k \cdot d$. Moreover, if we fix $\delta = 0$, then $h_d(0) = h_0(0) + a_0 \cdot d = g(0) + p \cdot d$. Now fix $\delta \in D_{n+1}$. By definition of $D_{n+1}$, $\delta = d_1 + \ldots + d_{n+1}$ for $d_k \in D$. Therefore, for all $k$, we have the following equation, where $\delta_k = \sum_{i \neq k}d_i$.
+  \[ g(\delta) = h_{d_k}(\delta_k) = g(0) + p \cdot d_k + (c_{1,0} + b_1 \cdot d_k)\delta_k + \ldots + (c_{n,0} + b_n \cdot d_k)\delta_k^n \]
+  The next step in this proof will be to add these $n+1$ equations together and then divide by $n+1$, but before we can do this, we need to get explicit formula for $\delta^i$ and $\delta_k^i$.
+  \[ \delta^i = \sum_{\abs{\alpha} = i} \mathbf{d}^\alpha \]
+  All the terms with $\alpha_j > 1$ are 0, so we are left with
+  \[ \delta^i = \sum_{\substack{U \subset \{1 \ldots n+1\} \\ \abs{U} = i}}\prod_{j \in U}d_j\]
+  Note that this sum has $\binom{n+1}{i}$ unique terms in it, as there are $\binom{n+1}{i}$ ways of selecting a set of size $i$ from a set of $n+1$ elements and all of them produce different products. Similarly,
+  \[ \delta_k^i = \sum_{\substack{ U \subset \{j \in \{1 \ldots n+1\}| j \neq k\} \\ \abs{U} = i }}\prod_{j \in U}d_j \]
+  which is a sum with $\binom{n}{i}$ unique terms.
+
+  Now, I claim that
+  \[ \sum_{k=1}^{n+1}\delta_k^i = (n + 1 - i)\delta^i \]
+  To prove this, first note that every term in $\delta_i^i$ is a term in $\delta^i$. Therefore, it suffices to show that each term of $\delta^i$ shows up $(n + 1 - i)$ times in the sum. Fix $U \subset {1 \ldots n+1}$, $\abs{U} = i$. For any $k$ if $k \not \in U$ then $\delta_k^i$ will have exactly one term equal to $\prod_{j \in U}d_j$, and if $k \in U$ then $\delta_k^i$ will have no terms equal to $\prod _{j \in U}d_j$. Therefore there are $(n+1) - i$ terms in the sum equal to $\prod_{j \in U}d_j$, as required.
+  Additionally, I claim that
+  \[ \sum_{k=1}^{n+1}d_k\delta_k^i = (i+1)\delta^{i+1} \]
+  Similarly, first note that $d_k\delta_k^i$ is a term in $\delta^{i+1}$. Therefore, it again suffices to show that each term of $\delta^{i+1}$ shows up $i+1$ times in the sum. Fix $U \subset \{1 \ldots n+1\}$, $\abs{U} = i+1$. For each $k$, if $k \in U$ then $d_k\delta_k^i$ contains one term that is equal to $\prod_{j \in U}d_j$. If $k \not \in U$ then $d_k\delta_k$ has no terms equal to $\prod_{j \in U}d_j$. Therefore, $\prod_{j \in U}d_j$ shows up exactly $i+1$ times in the sum, so we have our equality.
+
+  Going back a couple paragraphs, let's write out our equation for each $k$ again.
+  \[ g(\delta) = g(0) + p \cdot d_k + (c_{1,0} + b_1 \cdot d_k)\delta_k + \ldots + (c_{n,0} + b_n \cdot d_k)\delta_k^n\]
+  We add all (n+1) of these equations together to get:
+  \[(n+1)g(\delta) = (n+1)g(0) + p\sum_{k=1}^{n+1}d_k + c_{1,0}\sum_{k=1}^{n+1}\delta_k + b_1\sum_{k=1}^{n+1}d_k\delta_k + \ldots \]
+  Using the formulas we derived earlier, we can simplify this to
+  \[(n+1)g(\delta) = (n+1)g(0) + p\cdot \delta + c_{1,0}(n+1-1)\delta + b_1(2)\delta^2 + \ldots c_{n,0}(n+1 - n)\delta^n + b_n(n+1)\delta^{n+1} \]
+  Combining like terms and dividing by $n+1$ (which is a rational number, so we are allowed to do that), we get
+  \[ g(\delta) = g(0) + a_1\delta + a_2\delta^2 + \ldots + a_{n+1}\delta^{n+1}\]
+  where the $a_k$ are constants that are produced in some way from the $c_{k,0}$ and $b_k$ in some way that is not important to work out. Note that although there is in general more than one way to write $\delta$ as a sum of elements of $D$, the $c_{k,0}$ and $b_k$ were found independent of any particular sum, so they are not reliant on a particular sum, and thus neither are the $a_k$s.
+
+  This proves the first part of out theorem: the existence part. We now must show uniqueness. If we restrict $g$ to the domain of $D_n$ our induction hypothesis tells us that $a_1$ through $a_n$ are unique, as $\delta^{n+1} = 0$ for $\delta \in D_n$. Now, suppose that there are $a_{n+1}$ and $a_{n+1}'$ such that
+  \[ g(\delta) = g(0) + a_1\delta + \ldots + a_{n+1}\delta^{n+1} = g(0) + a_1\delta + \ldots + a_{n+1}'\delta^{n+1} \]
+  Then $g(\delta) - g(\delta) = 0 = (a_{n+1}-a_{n+1}')\delta^{n+1}$, Now, $\delta^{n+1} = d_1\cdot\ldots\cdot d_{n+1}$, so $a_{n+1}d_1\cdot\ldots\cdot d_{n+1} = a_{n+1}'d_1\cdot\ldots\cdot d_{n+1}$ for all $d_1, \ldots, d_{n+1}$. By Theorem \ref{cancellation}, this implies that $a_{n+1}d_1\cdot\ldots\cdot d_n = a_{n+1}'d_1\cdot\ldots\cdot d_n$ for every $d_1, \ldots d_n$, and we can continue on in this fashion until we get $a_{n+1} = a_{n+1}'$, as required. We are done.
+
 \end{proof}
 
 \end{document}
